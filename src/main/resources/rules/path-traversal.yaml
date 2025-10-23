@@ -1,0 +1,37 @@
+id: SEC-007
+name: Path Traversal Vulnerability
+description: Detects potential path traversal vulnerabilities in file operations
+severity: high
+category: security
+compliance:
+  - framework: owasp
+    control: "A01:2021"
+    requirement: "Broken Access Control"
+  - framework: cwe
+    control: "CWE-22"
+    requirement: "Path Traversal"
+  - framework: pci_dss
+    control: "6.5.8"
+    requirement: "Improper access control"
+patterns:
+  - type: regex
+    pattern: 'new\s+File\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential path traversal via unsanitized file path"
+  - type: regex
+    pattern: 'Files\.(read|write|delete|copy|move)\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential path traversal in file operation"
+  - type: regex
+    pattern: 'open\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["py"]
+    message: "Potential path traversal in file open()"
+  - type: regex
+    pattern: 'fs\.(readFile|writeFile|unlink|rename)\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["js", "ts"]
+    message: "Potential path traversal in fs operation"
+quickFix:
+  type: suggest
+  description: "Validate and sanitize file paths, use path normalization, and check for '..' sequences"
+enabled: true
+custom: false

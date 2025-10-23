@@ -1,0 +1,23 @@
+id: SEC-004
+name: Empty Catch Block
+description: Detects empty catch blocks that swallow exceptions without handling
+severity: medium
+category: quality
+compliance:
+  - framework: soc2
+    control: "CC7.2"
+    requirement: "System monitoring and error handling"
+patterns:
+  - type: regex
+    pattern: 'catch\s*\([^)]+\)\s*\{\s*\}'
+    fileTypes: ["java", "kt", "js", "ts"]
+    message: "Empty catch block swallows exceptions"
+  - type: regex
+    pattern: 'except[^:]*:\s*pass'
+    fileTypes: ["py"]
+    message: "Empty except clause swallows exceptions"
+quickFix:
+  type: suggest
+  description: "Add proper error handling or at least log the exception"
+enabled: true
+custom: false

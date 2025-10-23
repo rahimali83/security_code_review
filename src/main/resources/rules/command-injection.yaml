@@ -1,0 +1,37 @@
+id: SEC-006
+name: Command Injection Vulnerability
+description: Detects potential OS command injection vulnerabilities
+severity: critical
+category: injection
+compliance:
+  - framework: pci_dss
+    control: "6.5.1"
+    requirement: "Injection flaws"
+  - framework: owasp
+    control: "A03:2021"
+    requirement: "Injection"
+  - framework: cwe
+    control: "CWE-78"
+    requirement: "OS Command Injection"
+patterns:
+  - type: regex
+    pattern: 'Runtime\.getRuntime\(\)\.exec\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential command injection via string concatenation in exec()"
+  - type: regex
+    pattern: 'ProcessBuilder\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential command injection in ProcessBuilder"
+  - type: regex
+    pattern: '(os\.system|subprocess\.call|subprocess\.run|subprocess\.Popen)\s*\([^)]*%[^)]*\)'
+    fileTypes: ["py"]
+    message: "Potential command injection via string formatting"
+  - type: regex
+    pattern: '(exec|spawn|execSync|spawnSync)\s*\([^)]*\$\{[^}]+\}[^)]*\)'
+    fileTypes: ["js", "ts"]
+    message: "Potential command injection via template literals"
+quickFix:
+  type: suggest
+  description: "Use parameterized commands or input validation/sanitization"
+enabled: true
+custom: false

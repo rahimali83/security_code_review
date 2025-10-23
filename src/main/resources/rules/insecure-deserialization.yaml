@@ -1,0 +1,37 @@
+id: SEC-009
+name: Insecure Deserialization
+description: Detects use of insecure deserialization that may lead to remote code execution
+severity: critical
+category: security
+compliance:
+  - framework: owasp
+    control: "A08:2021"
+    requirement: "Software and Data Integrity Failures"
+  - framework: cwe
+    control: "CWE-502"
+    requirement: "Deserialization of Untrusted Data"
+  - framework: pci_dss
+    control: "6.5.6"
+    requirement: "High-risk vulnerabilities"
+patterns:
+  - type: regex
+    pattern: 'ObjectInputStream\s*\([^)]*\)\.readObject\s*\(\)'
+    fileTypes: ["java", "kt"]
+    message: "Insecure deserialization using ObjectInputStream"
+  - type: regex
+    pattern: 'XMLDecoder\s*\([^)]*\)\.readObject\s*\(\)'
+    fileTypes: ["java", "kt"]
+    message: "Insecure deserialization using XMLDecoder"
+  - type: regex
+    pattern: '(pickle\.loads|pickle\.load|yaml\.load)\s*\([^)]*\)'
+    fileTypes: ["py"]
+    message: "Insecure deserialization - use safe_load() or avoid deserializing untrusted data"
+  - type: regex
+    pattern: 'eval\s*\([^)]*\)'
+    fileTypes: ["js", "ts", "py"]
+    message: "Use of eval() can lead to code injection"
+quickFix:
+  type: suggest
+  description: "Avoid deserializing untrusted data, use safe alternatives, or implement integrity checks"
+enabled: true
+custom: false

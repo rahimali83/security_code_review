@@ -1,0 +1,41 @@
+id: SEC-003
+name: Weak Cryptographic Algorithms
+description: Detects use of weak or deprecated cryptographic algorithms like MD5, SHA1, DES
+severity: high
+category: cryptography
+compliance:
+  - framework: pci_dss
+    control: "3.5"
+    requirement: "Protect stored cardholder data with strong cryptography"
+  - framework: soc2
+    control: "CC6.7"
+    requirement: "Encryption of sensitive data"
+  - framework: nist
+    control: "SP 800-131A"
+    requirement: "Transitioning the Use of Cryptographic Algorithms"
+patterns:
+  - type: regex
+    pattern: '(?i)MessageDigest\.getInstance\s*\(\s*["\']MD5["\']\s*\)'
+    fileTypes: ["java", "kt"]
+    message: "MD5 is cryptographically broken and should not be used"
+  - type: regex
+    pattern: '(?i)MessageDigest\.getInstance\s*\(\s*["\']SHA-?1["\']\s*\)'
+    fileTypes: ["java", "kt"]
+    message: "SHA1 is deprecated and should be replaced with SHA-256 or better"
+  - type: regex
+    pattern: '(?i)Cipher\.getInstance\s*\(\s*["\']DES["\']'
+    fileTypes: ["java", "kt"]
+    message: "DES is insecure, use AES instead"
+  - type: regex
+    pattern: '(?i)(hashlib\.md5|hashlib\.sha1)\s*\('
+    fileTypes: ["py"]
+    message: "MD5/SHA1 are cryptographically weak, use SHA-256 or better"
+  - type: regex
+    pattern: '(?i)crypto\.createHash\s*\(\s*["\']md5["\']\s*\)'
+    fileTypes: ["js", "ts"]
+    message: "MD5 is cryptographically broken and should not be used"
+quickFix:
+  type: suggest
+  description: "Use SHA-256, SHA-384, SHA-512, or SHA-3 instead of deprecated algorithms"
+enabled: true
+custom: false

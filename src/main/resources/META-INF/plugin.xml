@@ -1,0 +1,71 @@
+<idea-plugin>
+    <id>com.securecode.guardian</id>
+    <name>SecureCode Guardian</name>
+    <vendor email="support@securecode.com" url="https://securecode.com">SecureCode</vendor>
+
+    <description><![CDATA[
+    <h1>SecureCode Guardian</h1>
+    <p>An intelligent and extensible code review agent that provides real-time and on-demand static analysis for security, compliance, and code quality.</p>
+
+    <h2>Features</h2>
+    <ul>
+        <li><b>Security Vulnerability Detection</b> - OWASP Top 10, CWE, injection attacks, cryptographic failures</li>
+        <li><b>Compliance Checks</b> - PCI DSS, SOC2, US/Canadian cyber regulations</li>
+        <li><b>Stateful Tracking</b> - Track vulnerabilities as New, Persistent, or Closed across scans</li>
+        <li><b>Dynamic Rule Engine</b> - Built-in rules plus custom rules from your project</li>
+        <li><b>Quick Fixes</b> - Automated suggestions for common security issues</li>
+        <li><b>Comprehensive Reports</b> - JSON reports with full vulnerability details</li>
+    </ul>
+
+    <h2>Supported Languages</h2>
+    <p>Java, Kotlin, Python, JavaScript, TypeScript, Go, and more</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Tool Window -->
+        <toolWindow id="SecureCode Guardian"
+                    secondary="false"
+                    icon="/icons/guardian.svg"
+                    anchor="bottom"
+                    factoryClass="com.securecode.guardian.ui.GuardianToolWindowFactory"/>
+
+        <!-- Project Service -->
+        <projectService serviceImplementation="com.securecode.guardian.service.ScanService"/>
+        <projectService serviceImplementation="com.securecode.guardian.service.RuleEngineService"/>
+        <projectService serviceImplementation="com.securecode.guardian.service.ReportService"/>
+
+        <!-- Startup Activity -->
+        <postStartupActivity implementation="com.securecode.guardian.startup.GuardianStartupActivity"/>
+    </extensions>
+
+    <actions>
+        <!-- Main Action Group -->
+        <group id="SecureCodeGuardian.ActionGroup" text="SecureCode Guardian" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+
+            <action id="SecureCodeGuardian.RunScan"
+                    class="com.securecode.guardian.action.RunScanAction"
+                    text="Run SecureCode Scan"
+                    description="Run security and compliance scan on project"
+                    icon="/icons/scan.svg">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift S"/>
+            </action>
+
+            <action id="SecureCodeGuardian.ViewReport"
+                    class="com.securecode.guardian.action.ViewReportAction"
+                    text="View Latest Report"
+                    description="Open the latest scan report"
+                    icon="/icons/report.svg"/>
+
+            <action id="SecureCodeGuardian.ConfigureRules"
+                    class="com.securecode.guardian.action.ConfigureRulesAction"
+                    text="Configure Rules"
+                    description="Configure custom rules"
+                    icon="/icons/config.svg"/>
+        </group>
+    </actions>
+</idea-plugin>
