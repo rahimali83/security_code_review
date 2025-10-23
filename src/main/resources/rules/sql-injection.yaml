@@ -1,0 +1,37 @@
+id: SEC-002
+name: SQL Injection Vulnerability
+description: Detects potential SQL injection vulnerabilities from string concatenation in SQL queries
+severity: critical
+category: injection
+compliance:
+  - framework: pci_dss
+    control: "6.5.1"
+    requirement: "Injection flaws, particularly SQL injection"
+  - framework: owasp
+    control: "A03:2021"
+    requirement: "Injection"
+  - framework: cwe
+    control: "CWE-89"
+    requirement: "SQL Injection"
+patterns:
+  - type: regex
+    pattern: '(executeQuery|execute|createQuery|createNativeQuery)\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential SQL injection via string concatenation"
+  - type: regex
+    pattern: '(execute|cursor\.execute|executemany)\s*\([^)]*%[^)]*\)'
+    fileTypes: ["py"]
+    message: "Potential SQL injection via string formatting"
+  - type: regex
+    pattern: '(query|execute|run)\s*\([^)]*\$\{[^}]+\}[^)]*\)'
+    fileTypes: ["js", "ts"]
+    message: "Potential SQL injection via template literals"
+  - type: regex
+    pattern: '(Exec|Query|QueryRow)\s*\([^)]*\+[^)]*\)'
+    fileTypes: ["go"]
+    message: "Potential SQL injection via string concatenation"
+quickFix:
+  type: suggest
+  description: "Use parameterized queries or prepared statements instead of string concatenation"
+enabled: true
+custom: false

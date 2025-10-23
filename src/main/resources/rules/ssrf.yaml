@@ -1,0 +1,30 @@
+id: SEC-008
+name: Server-Side Request Forgery (SSRF)
+description: Detects potential SSRF vulnerabilities where user input controls URLs in server-side requests
+severity: high
+category: security
+compliance:
+  - framework: owasp
+    control: "A10:2021"
+    requirement: "Server-Side Request Forgery (SSRF)"
+  - framework: cwe
+    control: "CWE-918"
+    requirement: "Server-Side Request Forgery"
+patterns:
+  - type: regex
+    pattern: '(HttpClient|CloseableHttpClient|RestTemplate)\s*\([^)]*\)\..*\([^)]*request\.[^)]*\)'
+    fileTypes: ["java", "kt"]
+    message: "Potential SSRF - user input used in HTTP request"
+  - type: regex
+    pattern: 'requests\.(get|post|put|delete)\s*\([^)]*request\.[^)]*\)'
+    fileTypes: ["py"]
+    message: "Potential SSRF - user input used in HTTP request"
+  - type: regex
+    pattern: '(fetch|axios)\s*\([^)]*req\.(body|query|params)[^)]*\)'
+    fileTypes: ["js", "ts"]
+    message: "Potential SSRF - user input used in HTTP request"
+quickFix:
+  type: suggest
+  description: "Validate and whitelist allowed URLs/domains before making server-side requests"
+enabled: true
+custom: false

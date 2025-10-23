@@ -1,0 +1,27 @@
+id: SEC-005
+name: Insecure HTTP Usage
+description: Detects use of HTTP instead of HTTPS for sensitive communications
+severity: high
+category: api_security
+compliance:
+  - framework: pci_dss
+    control: "4.1"
+    requirement: "Use strong cryptography and security protocols to safeguard sensitive data during transmission"
+  - framework: soc2
+    control: "CC6.7"
+    requirement: "Encryption of data in transit"
+patterns:
+  - type: regex
+    pattern: '["'']http://(?!localhost|127\.0\.0\.1)[^"'']*["'']'
+    fileTypes: ["java", "kt", "py", "js", "ts", "go"]
+    message: "HTTP URL detected - use HTTPS for secure communication"
+  - type: regex
+    pattern: '(?i)setScheme\s*\(\s*["'']http["'']\s*\)'
+    fileTypes: ["java", "kt"]
+    message: "HTTP scheme configured - use HTTPS instead"
+quickFix:
+  type: replace
+  description: "Replace http:// with https://"
+  replacement: "https://"
+enabled: true
+custom: false

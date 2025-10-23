@@ -1,0 +1,33 @@
+id: SEC-010
+name: Missing Authentication Check
+description: Detects API endpoints that may be missing authentication/authorization checks
+severity: high
+category: authentication
+compliance:
+  - framework: pci_dss
+    control: "8.1"
+    requirement: "Define and implement policies and procedures to ensure proper user identification management"
+  - framework: owasp
+    control: "A01:2021"
+    requirement: "Broken Access Control"
+  - framework: soc2
+    control: "CC6.1"
+    requirement: "Logical and physical access controls"
+patterns:
+  - type: regex
+    pattern: '@(GetMapping|PostMapping|PutMapping|DeleteMapping|RequestMapping)\s*\([^)]*\)\s*\n\s*public\s+(?!.*@(PreAuthorize|Secured|RolesAllowed))'
+    fileTypes: ["java", "kt"]
+    message: "API endpoint may be missing authentication/authorization annotation"
+  - type: regex
+    pattern: 'app\.(get|post|put|delete|patch)\s*\([^,]+,\s*(?!.*auth)[^)]*\)\s*\{'
+    fileTypes: ["js", "ts"]
+    message: "API route may be missing authentication middleware"
+  - type: regex
+    pattern: '@app\.route\([^)]*\)\s*\n\s*def\s+\w+\s*\([^)]*\):\s*\n(?!.*@login_required|@auth\.required)'
+    fileTypes: ["py"]
+    message: "Flask route may be missing authentication decorator"
+quickFix:
+  type: suggest
+  description: "Add authentication/authorization checks to protect sensitive endpoints"
+enabled: true
+custom: false
