@@ -5,6 +5,8 @@
 
 **SecureCode Guardian** is an intelligent and extensible code review agent for JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, etc.). It provides real-time and on-demand static analysis for security vulnerabilities, compliance violations, and code quality issues with a unique focus on **stateful remediation tracking** and a **dynamic, user-expandable rule engine**.
 
+**developed as part of a learning project by integrating existing security check rulebase with Claude Code**
+
 ## 🎯 Key Features
 
 ### 🔒 Comprehensive Security Analysis
